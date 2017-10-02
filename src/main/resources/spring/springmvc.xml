@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:websocket="http://www.springframework.org/schema/websocket"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+	<!--&lt;!&ndash;加载属性文件  &ndash;&gt;-->
+	<!--<context:property-placeholder location="classpath*:properties/*.properties" />-->
+	<!--配置注解驱动  -->
+
+	<mvc:annotation-driven/>
+	<!--配置包扫描器  -->
+	<context:component-scan base-package="org.cet.controller,org.cet.websocket"></context:component-scan>
+	<!-- <import resource="classpath:mybatis/*.xml"/> -->
+
+	<mvc:default-servlet-handler/>
+	<!--配置静态资源映射（即解析CSS JS）-->
+	<mvc:resources location="/WEB-INF/js/" mapping="/js/**"/>
+	<!--<mvc:resources location="/WEB-INF/css/" mapping="/css/**"/>-->
+	<!--<mvc:resources location="/WEB-INF/images/" mapping="/images/**"/>-->
+	<!--<mvc:resources location="/WEB-INF/index.ftl/" mapping="/index.ftl/favicon.ico"/>-->
+	<!--多媒体解析器-->
+	<bean id="multipartResolver"
+		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设定默认编码 -->
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+		<property name="maxUploadSize" value="5242880"></property>
+	</bean>
+
+	<!-- HTML视图 -->
+	<!--<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">-->
+		<!--<property name="suffix" value=".ftl"/>-->
+		<!--<property name="contentType" value="text/html; charset=UTF-8"/>-->
+		<!--<property name="order" value="1"/>-->
+	<!--</bean>-->
+	<!--<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">-->
+		<!--<property name="templateLoaderPath" value="/WEB-INF/ftl/"/>-->
+		<!--<property name="freemarkerSettings">-->
+			<!--<props>-->
+				<!--<prop key="locale">zh_CN</prop>-->
+				<!--<prop key="defaultEncoding">UTF-8</prop>-->
+				<!--<prop key="date_format">yyyy-MM-dd</prop>-->
+				<!--<prop key="time_format">HH:mm:ss</prop>-->
+				<!--<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>-->
+				<!--<prop key="number_format">0.################</prop>-->
+			<!--</props>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
+			<mvc:mapping path="/auth.html/**" />
+			<bean class="org.cet.interceptor.SnsapiBaseInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
+	</mvc:interceptors>
+
+	<!--websocket配置-->
+	<!--如果使用注解，那么只需要下面的配置-->
+	<!--组件扫描-->
+
+	<!--注解自动加载，不用配置映射器和适配器了-->
+
+</beans>        
